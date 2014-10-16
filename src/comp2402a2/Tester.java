@@ -67,6 +67,7 @@ public class Tester {
     	if (timer.elapsedSeconds() > 2) {return false;}
     	
 		return true;
+
     }
 
     public static boolean testPart3(List<Integer> ad) {
