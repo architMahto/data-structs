@@ -12,6 +12,8 @@ public class Tester {
 
     public static boolean testPart2(List<Integer> ad) {
         // Your code goes here
+    	BulkArrayDeque bad = new BulkArrayDeque(new Class<T>());
+    	bad.addAll(7, ad);
         return false;
     }
 
