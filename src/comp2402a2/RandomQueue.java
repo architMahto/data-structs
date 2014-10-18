@@ -74,11 +74,12 @@ public class RandomQueue<T> extends AbstractQueue<T> {
 	public T poll() {
 		if (l.size() == 0)
 			return null;
-		/*assert(next >= 0 && next <= l.size()-1);
-		T x = l.remove(next);
-		next = (l.size() > 0) ? r.nextInt(l.size()) : -1;*/
-		Collections.shuffle(l);
-		T x = l.remove(l.size()-1);
+		assert(next >= 0 && next <= l.size()-1);
+		T x = l.get(next);
+		l.set(next, l.get(l.size()-1));
+		l.remove(l.size()-1);
+		next = (l.size() > 0) ? r.nextInt(l.size()) : -1;
+
 		return x;
 	}
 

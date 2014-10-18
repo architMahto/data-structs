@@ -39,6 +39,7 @@ public class ArrayDeque3<T> extends AbstractList<T> {
 	 */
 	protected void resize() {
 		// TODO implement this
+		
 	}
 	
 	/**
@@ -57,13 +58,15 @@ public class ArrayDeque3<T> extends AbstractList<T> {
 	
 	public T get(int i) {
 		if (i < 0 || i > n-1) throw new IndexOutOfBoundsException();
-		return a[(j+i)%a.length];  // stop using % here
+		int mask = (int) Math.log(a.length) - 1;
+		return a[(j+i) & mask];  // stop using  here
 	}
 	
 	public T set(int i, T x) {
 		if (i < 0 || i > n-1) throw new IndexOutOfBoundsException();
-		T y = a[(j+i)%a.length];   // stop using mod here
-		a[(j+i)%a.length] = x;     // stop using mod here
+		int mask = (int) Math.log(a.length) - 1; 
+		T y = a[(j+i) & mask];   // stop using mod here
+		a[(j+i) & mask] = x;     // stop using mod here
 		return y;
 	}
 	
@@ -78,17 +81,19 @@ public class ArrayDeque3<T> extends AbstractList<T> {
 			for (int k = n; k > i; k--)
 				set(k, get(k-1));
 		}
-		a[(j+i)%a.length] = x;     // stop using mod here
+		int mask = (int) Math.log(a.length) - 1;
+		a[(j+i) & mask] = x;     // stop using mod here
 		n++;
 	}
 	
 	public T remove(int i) {
 		if (i < 0 || i > n - 1)	throw new IndexOutOfBoundsException();
-		T x = a[(j+i)%a.length];   // stop using mod here
+		int mask = (int) Math.log(a.length) - 1;
+		T x = a[(j+i) & mask];   // stop using mod here
 		if (i < n/2) {  // shift a[0],..,[i-1] right one position
 			for (int k = i; k > 0; k--)
 				set(k, get(k-1));
-			j = (j + 1) % a.length;    // get rid of the mod here
+			j = (int) ((j+1) - a.length*Math.floor((j+1)/a.length));    // get rid of the mod here
 		} else {        // shift a[i+1],..,a[n-1] left one position
 			for (int k = i; k < n-1; k++)
 				set(k, get(k+1));
