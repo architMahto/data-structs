@@ -78,61 +78,74 @@ public class Tester {
         // Your code goes here
     	Stopwatch timer = new Stopwatch();
     	
-
-    	for (int i = 0; i < 1000000; i++) {ad.add(i,i);}
-
-    	for (int i = 0; i < 20; i++) {ad.add(i,i);}
-
+    	for (int i = 0; i < 10; i++) {ad.add(i,i);}
     	
-    	// test 1
+    	System.out.println(ad + "\n");
+    	
+    	//test 1
     	timer.start();
-    	ad.add(9,100);
+    	ad.add(5,30);
     	timer.stop();    	
     	if (timer.elapsedSeconds() > 2) {return false;}
-    	if (ad.get(9) != 100) {return false;}
+    	if (ad.get(5) != 30) {return false;}
     	
-    	// test 2
+    	/*/ test 2
     	timer.start();
     	ad.add(15,2000000);
     	timer.stop();    	
     	if (timer.elapsedSeconds() > 2) {return false;}
-    	if (ad.get(15) != 1000) {return false;}
+    	if (ad.get(15) != 1000) {return false;}/*/
     	
     	return true;
     }
-
+    
     public static boolean testPart5(List<Integer> ras) {
         // Your code goes here
     	Stopwatch timer = new Stopwatch();
     	
-    	
+    	System.out.println("Original Rootish Array Stack: \n");
 
-    	for (int i = 0; i < 1000000; i++) {ras.add(i);}
+    	for (int i = 0; i < 15; i++) {
+    		ras.add(i);
+    		System.out.println(ras.get(i));
+    	}
     	
-    	// test 1
+    	System.out.println("\n");
+    	
+    	//test 1
     	timer.start();
-    	ras.add(15,2000000);
+    	ras.remove(3);
     	timer.stop();
-    	if (ras.get(15) != 2000000) {return false;}
-
-    	for (int i = 0; i < 20; i++) {ras.add(i,i);}
     	
-    	// test 1
+    	System.out.println("Modified Rootish Array Stack: \n");
+    	
+    	for (int i = 0; i < ras.size(); i++) {
+    		System.out.println(ras.get(i));
+    	}
+    	
+    	System.out.println("\n");
+    	
+    	System.out.println("Part 5 took " + timer.elapsedSeconds() + "\n");
+    	if (timer.elapsedSeconds() > 2) {return false;}
+    	//System.out.println("\n");
+    	
+    	/*/ test 1
     	timer.start();
     	ras.add(5,2000000);
     	timer.stop();
     	if (ras.get(5) != 2000000) {return false;}
 
-    	if (timer.elapsedSeconds() > 2) {return false;}
+    	if (timer.elapsedSeconds() > 2) {return false;}/*/
     	
     	return true;
     }
     
     public static void main(String[] args)
     {
-    	BulkArrayDeque<Integer> ad = new BulkArrayDeque<Integer>(Integer.class);
     	RandomQueue<Integer> q = new RandomQueue<Integer>();
+    	BulkArrayDeque<Integer> ad = new BulkArrayDeque<Integer>(Integer.class);
     	ArrayDeque2<Integer> ad2 = new ArrayDeque2<Integer>(Integer.class);
+    	ArrayDeque3<Integer> ad3 = new ArrayDeque3<Integer>(Integer.class);
     	RootishArrayStack2<Integer> ras = new RootishArrayStack2<Integer>(Integer.class);
     	
 
@@ -151,10 +164,15 @@ public class Tester {
     	else
     		System.out.println("Test(s) for Part 3 Failed!");*/
     	
-    	/*if (testPart5(ras)) 
-    		System.out.println("Test(s) for Part 4 Passed!");
+    	/*if (testPart3(ad3)) 
+    		System.out.println("Test(s) for Part 4 Passed");
+		else
+			System.out.println("Test(s) for Part 4 Failed!");*/
+    	
+    	if (testPart5(ras)) 
+    		System.out.println("Test(s) for Part 5 Passed!");
     	else 
-    		System.out.println("Test(s) for Part 5 Failed!");*/
+    		System.out.println("Test(s) for Part 5 Failed!");
 
     }
 }
