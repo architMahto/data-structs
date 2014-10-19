@@ -2,6 +2,7 @@ package comp2402a2;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -103,13 +104,29 @@ public class RootishArrayStack2<T> extends AbstractList<T> {
 	 */
 	public T remove(int i) {
 		if (i < 0 || i > n - 1) throw new IndexOutOfBoundsException();
-		T x = get(i);
-		for (int j = i; j < n-1; j++)
-			set(j, get(j+1));
-		n--;
-		int r = blocks.size();
-		if ((r-2)*(r-1)/2 >= n)	shrink();
-		return x;
+		int b = i2b(i);
+		int k = b*(b+1)/2;
+		if (k == 0) {
+			T x = blocks.get(b).popFront();
+			n--;
+			int r = blocks.size();
+			if ((r-2)*(r-1)/2 >= n)	shrink();
+			return x;
+		} else if (k == blocks.get(b).size() - 1) {
+			T x = blocks.get(b).popBack();
+			n--;
+			int r = blocks.size();
+			if ((r-2)*(r-1)/2 >= n)	shrink();
+			return x;
+		} else {
+			T x = get(i);
+			for (int j = i; j < n-1; j++)
+				set(j, get(j+1));
+			n--;
+			int r = blocks.size();
+			if ((r-2)*(r-1)/2 >= n)	shrink();
+			return x;
+		}
 	}
 
 	public int size() {
