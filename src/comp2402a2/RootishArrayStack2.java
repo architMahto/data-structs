@@ -2,7 +2,6 @@ package comp2402a2;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -94,8 +93,28 @@ public class RootishArrayStack2<T> extends AbstractList<T> {
 		if (r*(r+1)/2 < n + 1) grow();
 		blocks.get(blocks.size()-1).add(null);
 		n++;
-		for (int j = n-1; j > i; j--)
-			set(j, get(j-1));
+		int b = i2b(i);
+		int c = i - b*(b+1)/2;
+		  
+		T temp;
+		if (b == blocks.size()-1) {
+		  for (int j = blocks.get(b).size()-1; j > c; j--) {
+		    set(j, get(j-1));
+		  }
+		}
+		else {
+		  temp = blocks.get(b).get(blocks.get(b).size()-1);
+		  for (int j = blocks.get(b).size()-1; j > c; j--) {
+		    blocks.get(b).set(j, blocks.get(b).get(j-1));
+		  }
+		  for (int j = blocks.size()-1; j > b; j--) {
+		    if (j-1 == b) {
+		      blocks.get(j).pushFront(temp);
+		      break;
+		    }
+		    blocks.get(j).pushFront(blocks.get(j-1).popBack());
+		  }
+		}
 		set(i, x);
 	}
 	
@@ -104,29 +123,25 @@ public class RootishArrayStack2<T> extends AbstractList<T> {
 	 */
 	public T remove(int i) {
 		if (i < 0 || i > n - 1) throw new IndexOutOfBoundsException();
+		T x = null, y = null;
 		int b = i2b(i);
-		int k = b*(b+1)/2;
-		if (k == 0) {
-			T x = blocks.get(b).popFront();
-			n--;
-			int r = blocks.size();
-			if ((r-2)*(r-1)/2 >= n)	shrink();
-			return x;
-		} else if (k == blocks.get(b).size() - 1) {
-			T x = blocks.get(b).popBack();
-			n--;
-			int r = blocks.size();
-			if ((r-2)*(r-1)/2 >= n)	shrink();
-			return x;
+		int j = i - b*(b+1)/2;
+		if (j < blocks.get(b).size()/2) {
+			x = get(i);
+			if (i == 0) 
+			for (int k = j; k > 0; k--)
+				set(k,get(k-1));
+			y = blocks.get(b).popFront();
 		} else {
-			T x = get(i);
-			for (int j = i; j < n-1; j++)
-				set(j, get(j+1));
-			n--;
-			int r = blocks.size();
-			if ((r-2)*(r-1)/2 >= n)	shrink();
-			return x;
+			x = get(i);
+			for (int k = j; k < blocks.get(b).size() - 1;k++)
+				set(k,get(k+1));
+			y = blocks.get(b).popBack();
 		}
+		n--;
+		int r = blocks.size();
+		if ((r-2)*(r-1)/2 >= n)	shrink();
+		return x;
 	}
 
 	public int size() {

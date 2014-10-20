@@ -44,8 +44,21 @@ public class ArrayDeque3<T> extends AbstractList<T> {
 	 */
 	protected void resize() {
 		// TODO implement this
+		//int d = (int) Math.ceil(Math.log(a.length));
+		T[] b = f.newArray(Math.max(2*n,1));
+		for (int k = 0; k < n; k++) {
+			if ((j+k) >= a.length) 
+				j = -1;
+			b[n/2+k] = a[j+k];
+		}
+		j = n/2;
+		a = b;
+	}
+	
+	protected void resizeToPowerOfTwo() {
+		// TODO implement this
 		int d = (int) Math.ceil(Math.log(a.length));
-		T[] b = f.newArray(Math.max((int)Math.pow(2,d),1));
+		T[] b = f.newArray(Math.max((int)Math.pow(2, d),1));
 		for (int k = 0; k < n; k++) {
 			if ((j+k) >= a.length) 
 				j = -1;
@@ -97,6 +110,10 @@ public class ArrayDeque3<T> extends AbstractList<T> {
 		int mask = (int) Math.log(a.length) - 1;
 		a[(j+i) & mask] = x;     // stop using mod here
 		n++;
+		/*int d = (int) Math.ceil(Math.log(a.length));
+		if (a.length != Math.pow(2, d)) {
+			resizeToPowerOfTwo();
+		}*/	
 	}
 	
 	public T remove(int i) {
