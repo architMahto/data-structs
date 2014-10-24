@@ -46,7 +46,7 @@ public class DisjointIntervalSet<K extends Comparable<K>> implements IntervalSet
      * @param args
      */
     public static void main(String[] args) {
-        Tester.testPart1(new DisjointIntervalSet<>());
+        Tester.testPart1(new DisjointIntervalSet<Integer>());
     }
 
 }

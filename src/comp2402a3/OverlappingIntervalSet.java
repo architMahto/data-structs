@@ -46,7 +46,7 @@ public class OverlappingIntervalSet<K extends Comparable<K>> implements Interval
      * @param args
      */
     public static void main(String[] args) {
-        Tester.testPart2(new OverlappingIntervalSet<>());
+        Tester.testPart2(new OverlappingIntervalSet<Integer>());
     }
 
 }
