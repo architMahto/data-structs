@@ -138,8 +138,7 @@ public class Interval<T extends Comparable<T>> implements Comparable<Interval<T>
         for (int i = 0; i < 50; i++) {
             // This illustrates how to search for the interval containing a
             // query value i within a SortedSet of disjoint intervals.
-            SortedSet<Interval<Integer>> ts
-                    = s.tailSet(new Interval<>(i, i)); // Find stuff >= [i,i)
+            SortedSet<Interval<Integer>> ts = s.tailSet(new Interval<>(i, i)); // Find stuff >= [i,i)
             if (!ts.isEmpty()) {
                 Interval<Integer> u = ts.first(); // if it's there, it's in
                 // the first interval

@@ -23,6 +23,9 @@ public class OverlappingIntervalSet<K extends Comparable<K>> implements Interval
     @Override
     public boolean add(Interval<K> i) {
         // TODO: Add code here
+    	// Check if i overlaps with other intervals in set 
+    	// Pick the min. value for a and the max. value for b
+    	// when i overlaps with 2 or more intervals
         return false;
     }
 
@@ -34,6 +37,10 @@ public class OverlappingIntervalSet<K extends Comparable<K>> implements Interval
     @Override
     public boolean contains(K x) {
         // TODO Add code for searching here.
+    	for (Interval<K> i : intervals) {
+    		if (i.contains(x))
+    			return true;
+    	}
         return false;
     }
 

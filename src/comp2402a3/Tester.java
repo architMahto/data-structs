@@ -2,26 +2,73 @@ package comp2402a3;
 
 public class Tester {
 
-    public static boolean testPart1(IntervalSet<Integer> dis) {
+    public static <K> boolean testPart1(IntervalSet<Integer> dis) {
         // Your code goes here
-    	for (int j = 0; j < 10; j++) {
-    		for (int k = 0; k < 10; k++) {
-    			Interval i = new Interval(j,k);
-    			dis.add(i);
-    		}
+    	for (int j = 0; j < 5; j++) {
+			Interval<Integer> i = new Interval<Integer>(j,j+1);
+			dis.add(i);
     	}
-    	dis.add(new Interval(20,20));
-        return false;
+    	
+    	System.out.println(dis);
+    	    	
+    	System.out.println("\n");
+    	
+    	for (int j = 7; j < 10; j++) {
+			Interval<Integer> i = new Interval<Integer>(j,j+1);
+			dis.add(i);
+    	}
+    	
+    	System.out.println(dis);
+    	    	
+    	System.out.println("\n");
+    	
+    	dis.add(new Interval<Integer>(6,8));
+    	
+    	System.out.println(dis);
+    	
+    	System.out.println("\n");
+    	
+    	if (dis.contains(6))
+    		return false;
+    	
+    	dis.add(new Interval<Integer>(6,7));
+    	
+    	System.out.println(dis);
+    	
+    	System.out.println("\n");
+    	
+    	if (!dis.contains(6))
+    		return false;
+    	
+    	dis.add(new Interval<Integer>(5,6));
+    	
+    	System.out.println(dis);
+    	
+    	System.out.println("\n");
+    	
+    	if (!dis.contains(5))
+    		return false;
+    	    	
+        return true;
     }
 
     public static boolean testPart2(IntervalSet<Integer> dis) {
         // Your code goes here
     	for (int j = 0; j < 10; j++) {
-    		for (int k = 0; k < 10; k++) {
-    			Interval i = new Interval(j,k);
+    		for (int k = j + 1; k < 11; k++) {
+    			Interval<Integer> i = new Interval<Integer>(j,k);
     			dis.add(i);
     		}
     	}
         return false;
+    }
+    
+    public static void main(String[] args) {
+    	IntervalSet<Integer> dis = new DisjointIntervalSet<Integer>();
+    	
+    	if (testPart1(dis)) 
+    		System.out.println("Test(s) for Part 1 Passed!");
+    	else 
+    		System.out.println("Test(s) for Part 1 Failed!");
     }
 }
