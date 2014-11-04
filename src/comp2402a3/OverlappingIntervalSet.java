@@ -1,6 +1,5 @@
 package comp2402a3;
 
-import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -26,6 +25,47 @@ public class OverlappingIntervalSet<K extends Comparable<K>> implements Interval
     	// Check if i overlaps with other intervals in set 
     	// Pick the min. value for a and the max. value for b
     	// when i overlaps with 2 or more intervals
+    	if (intervals.isEmpty() &&
+        		(!(i.getA().compareTo(i.getB()) == 0))) {
+        		intervals.add(i);
+        		return true;
+        } else {
+        	SortedSet<Interval<K>> hs = intervals.headSet(new Interval<>(i.getA(), i.getA()));
+        	SortedSet<Interval<K>> ts = intervals.tailSet(new Interval<>(i.getA(), i.getA()));
+        	
+        	if (ts.isEmpty()) {
+        		if (i.getA().compareTo(hs.last().getB()) <= 0 &&
+        			i.getB().compareTo(hs.last().getB()) > 0) {
+        			intervals.clear();
+        			intervals.add(new Interval<>(hs.last().getA(),i.getB()));
+        		} else if (i.getA().compareTo(hs.last().getB()) > 0) {
+        			intervals.add(i);
+        		}
+    			return true;
+        	} else if (hs.isEmpty()) {
+        		if (i.getA().compareTo(ts.first().getA()) < 0) {
+        			if (i.getB().compareTo(ts.first().getB()) <= 0) {
+        				if (i.getB().compareTo(ts.first().getA()) < 0) {
+        					intervals.add(i);
+        				} else {
+        					intervals.clear();
+        					intervals.add(new Interval<>(i.getA(),ts.first().getB()));
+        				}
+        			} else {
+        				intervals.clear();
+        				intervals.add(i);
+        			}
+        			ts.clear();
+        		} else if (i.getA().compareTo(ts.first().getA()) == 0) {
+        			if (i.getB().compareTo(ts.first().getB()) > 0) {
+        				intervals.clear();
+        				intervals.add(new Interval<>(ts.first().getA(),i.getB()));
+        			}
+        		}
+    			return true;
+        	}
+        }
+    	
         return false;
     }
 
