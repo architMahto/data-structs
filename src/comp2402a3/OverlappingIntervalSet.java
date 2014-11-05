@@ -34,32 +34,46 @@ public class OverlappingIntervalSet<K extends Comparable<K>> implements Interval
         	SortedSet<Interval<K>> ts = intervals.tailSet(new Interval<>(i.getA(), i.getA()));
         	
         	if (ts.isEmpty()) {
-        		if (i.getA().compareTo(hs.last().getB()) <= 0 &&
-        			i.getB().compareTo(hs.last().getB()) > 0) {
-        			intervals.clear();
-        			intervals.add(new Interval<>(hs.last().getA(),i.getB()));
-        		} else if (i.getA().compareTo(hs.last().getB()) > 0) {
+        		// if interval is being added at the end
+        		if (i.getA().compareTo(hs.last().getB()) > 0) {
+        			// if interval is disjoint
         			intervals.add(i);
+        		} else {
+        			if (i.getB().compareTo(hs.last().getB()) > 0) {
+        				// if interval is bigger than overlapping interval
+        				intervals.add(new Interval<>(hs.last().getA(), i.getB()));
+        				hs.clear();
+        			} else {
+        				return false;
+        			}
         		}
     			return true;
         	} else if (hs.isEmpty()) {
+        		// if interval is being added at the beginning
         		if (i.getA().compareTo(ts.first().getA()) < 0) {
-        			if (i.getB().compareTo(ts.first().getB()) <= 0) {
-        				if (i.getB().compareTo(ts.first().getA()) < 0) {
-        					intervals.add(i);
-        				} else {
-        					intervals.clear();
-        					intervals.add(new Interval<>(i.getA(),ts.first().getB()));
-        				}
-        			} else {
-        				intervals.clear();
+        			// if interval is being added to the left of the tail set
+        			if (i.getB().compareTo(ts.first().getA()) < 0) {
+        				// interval is disjoint
         				intervals.add(i);
+        			} else {
+        				if (i.getB().compareTo(ts.first().getB()) <= 0) {
+        					// interval is smaller than end of tail set interval
+        					intervals.add(new Interval<>(i.getA(), ts.first().getB()));
+        					ts.clear();
+        				} else {
+        					// interval is larger than tail set interval
+        					intervals.add(i);
+        					ts.clear();
+        				}
         			}
-        			ts.clear();
         		} else if (i.getA().compareTo(ts.first().getA()) == 0) {
+        			// if interval is added at the tail set
         			if (i.getB().compareTo(ts.first().getB()) > 0) {
-        				intervals.clear();
-        				intervals.add(new Interval<>(ts.first().getA(),i.getB()));
+        				// if interval is large
+        				intervals.add(i);
+        				ts.clear();
+        			} else {
+        				return false;
         			}
         		}
     			return true;
