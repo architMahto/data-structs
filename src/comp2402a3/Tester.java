@@ -3,8 +3,11 @@ package comp2402a3;
 public class Tester {
 
     public static <K> boolean testPart1(IntervalSet<Integer> dis) {
+    	
+    	Stopwatch timer = new Stopwatch();
+    	
         // Your code goes here
-    	for (int j = 0; j < 5; j++) {
+    	for (int j = 2; j < 5; j++) {
 			Interval<Integer> i = new Interval<Integer>(j,j+1);
 			dis.add(i);
     	}
@@ -22,31 +25,59 @@ public class Tester {
     	    	
     	System.out.println("\n");
     	
+    	timer.start();
     	dis.add(new Interval<Integer>(6,8));
+    	timer.stop();
     	
     	System.out.println(dis);
     	
     	System.out.println("\n");
     	
-    	if (dis.contains(6))
+    	if (dis.contains(6) && timer.elapsedSeconds() > 2)
     		return false;
     	
+    	timer.start();
     	dis.add(new Interval<Integer>(6,7));
+    	timer.stop();
     	
     	System.out.println(dis);
     	
     	System.out.println("\n");
     	
-    	if (!dis.contains(6))
+    	if (!dis.contains(6) && timer.elapsedSeconds() > 2)
     		return false;
     	
+    	timer.start();
     	dis.add(new Interval<Integer>(5,6));
+    	timer.stop();
     	
     	System.out.println(dis);
     	
     	System.out.println("\n");
     	
-    	if (!dis.contains(5))
+    	if (!dis.contains(5) && timer.elapsedSeconds() > 2)
+    		return false;
+    	
+    	timer.start();
+    	dis.add(new Interval<Integer>(10,12));
+    	timer.stop();
+    	
+    	System.out.println(dis);
+    	
+    	System.out.println("\n");
+    	
+    	if (!dis.contains(10) && timer.elapsedSeconds() > 2)
+    		return false;
+    	
+    	timer.start();
+    	dis.add(new Interval<Integer>(0,2));
+    	timer.stop();
+    	
+    	System.out.println(dis);
+    	
+    	System.out.println("\n");
+    	
+    	if (!dis.contains(0) && timer.elapsedSeconds() > 2)
     		return false;
     	    	
         return true;
@@ -76,14 +107,22 @@ public class Tester {
     	IntervalSet<Integer> dis = new DisjointIntervalSet<Integer>();
     	IntervalSet<Integer> ovr = new OverlappingIntervalSet<Integer>();
     	
-    	/*if (testPart1(dis)) 
-    		System.out.println("Test(s) for Part 1 Passed!");
+    	System.out.println("----------------------");
+    	System.out.println("Disjoint Interval Test");
+    	System.out.println("----------------------\n");
+    	
+    	if (testPart1(dis)) 
+    		System.out.println("Test(s) for Part 1 Passed!\n\n");
     	else 
-    		System.out.println("Test(s) for Part 1 Failed!");*/
+    		System.out.println("Test(s) for Part 1 Failed!\n\n");
+    	
+    	System.out.println("-------------------------");
+    	System.out.println("Overlapping Interval Test");
+    	System.out.println("-------------------------\n");
     	
     	if (testPart2(ovr)) 
-    		System.out.println("Test(s) for Part 1 Passed!");
+    		System.out.println("Test(s) for Part 2 Passed!\n\n");
     	else 
-    		System.out.println("Test(s) for Part 1 Failed!");
+    		System.out.println("Test(s) for Part 2 Failed!\n\n");
     }
 }
