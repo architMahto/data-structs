@@ -26,25 +26,25 @@ public class Tester {
     	System.out.println("\n");
     	
     	timer.start();
-    	dis.add(new Interval<Integer>(6,8));
+    	dis.add(new Interval<Integer>(0,2));
     	timer.stop();
     	
     	System.out.println(dis);
     	
     	System.out.println("\n");
     	
-    	if (dis.contains(6) && timer.elapsedSeconds() > 2)
+    	if (dis.contains(0) && timer.elapsedSeconds() > 2)
     		return false;
     	
     	timer.start();
-    	dis.add(new Interval<Integer>(6,7));
+    	dis.add(new Interval<Integer>(5,8));
     	timer.stop();
     	
     	System.out.println(dis);
     	
     	System.out.println("\n");
     	
-    	if (!dis.contains(6) && timer.elapsedSeconds() > 2)
+    	if (!dis.contains(5) && timer.elapsedSeconds() > 2)
     		return false;
     	
     	timer.start();
@@ -59,6 +59,17 @@ public class Tester {
     		return false;
     	
     	timer.start();
+    	dis.add(new Interval<Integer>(6,7));
+    	timer.stop();
+    	
+    	System.out.println(dis);
+    	
+    	System.out.println("\n");
+    	
+    	if (!dis.contains(6) && timer.elapsedSeconds() > 2)
+    		return false;
+    	
+    	timer.start();
     	dis.add(new Interval<Integer>(10,12));
     	timer.stop();
     	
@@ -70,14 +81,25 @@ public class Tester {
     		return false;
     	
     	timer.start();
-    	dis.add(new Interval<Integer>(0,2));
+    	dis.add(new Interval<Integer>(1,2));
     	timer.stop();
     	
     	System.out.println(dis);
     	
     	System.out.println("\n");
     	
-    	if (!dis.contains(0) && timer.elapsedSeconds() > 2)
+    	if (timer.elapsedSeconds() > 2)
+    		return false;
+    	
+    	timer.start();
+    	dis.add(new Interval<Integer>(11,12));
+    	timer.stop();
+    	
+    	System.out.println(dis);
+    	
+    	System.out.println("\n");
+    	
+    	if (timer.elapsedSeconds() > 2)
     		return false;
     	    	
         return true;

@@ -30,39 +30,20 @@ public class DisjointIntervalSet<K extends Comparable<K>> implements IntervalSet
     		return true;
     	} else {
 	    	SortedSet<Interval<K>> ts = intervals.tailSet(new Interval<>(i.getA(), i.getA()));
-	    	SortedSet<Interval<K>> hs = intervals.headSet(new Interval<>(i.getA(), i.getA()));
 	    	
-	    	if (hs.isEmpty()) {
-	    		// adding at the beginning
-	    		if (i.getB().compareTo(ts.first().getA()) <= 0) {
-	    			intervals.add(i);
-	                return true;
-	    		} else {
-    				return false;
-    			}
-	    	} else if (ts.isEmpty()) {
+	    	if (ts.isEmpty()) {
 	    		// adding at the end
-	    		if (i.getA().compareTo(hs.last().getB()) >= 0) {
-	    			intervals.add(i);
-	                return true;
-	    		} else {
-	    			return false;
-	    		}
+	    		intervals.add(i);
+	    		return true;
 	    	} else {
-	    		// adding in the middle
-	    		if (i.getA().compareTo(hs.last().getB()) >= 0) {
-	    			if (i.getB().compareTo(ts.first().getA()) <= 0) {
-		    			intervals.add(i);
-		                return true;
-	    			} else {
-	    				return false;
-	    			}
+	    		if (!ts.first().contains(i.getA()) && !i.contains(ts.first().getA())) {
+	    			intervals.add(i);
+	    			return true;
 	    		} else {
 	    			return false;
 	    		}
 	    	}
         }
-    	
     }
 
     @Override
@@ -73,7 +54,9 @@ public class DisjointIntervalSet<K extends Comparable<K>> implements IntervalSet
     @Override
     public boolean contains(K x) {
         // TODO Add code for searching here.  See Interval.main() for an example
-    	for (Interval<K> i : intervals) {
+    	SortedSet<Interval<K>> set = intervals.tailSet(new Interval<K>(x,x));
+    	if (!set.isEmpty()) {
+    		Interval<K> i = set.first();
     		if (i.contains(x))
     			return true;
     	}

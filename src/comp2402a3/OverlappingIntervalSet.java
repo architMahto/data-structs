@@ -25,7 +25,7 @@ public class OverlappingIntervalSet<K extends Comparable<K>> implements Interval
     	// Check if i overlaps with other intervals in set 
     	// Pick the min. value for a and the max. value for b
     	// when i overlaps with 2 or more intervals
-    	if (intervals.isEmpty() &&
+    	/*if (intervals.isEmpty() &&
         		(!(i.getA().compareTo(i.getB()) == 0))) {
         		intervals.add(i);
         		return true;
@@ -80,7 +80,28 @@ public class OverlappingIntervalSet<K extends Comparable<K>> implements Interval
         	}
         }
     	
-        return false;
+        return false;*/
+    	
+    	if (intervals.isEmpty()) {
+    		// add to an empty set
+    		intervals.add(i);
+    		return true;
+    	} else {
+	    	SortedSet<Interval<K>> ts = intervals.tailSet(new Interval<>(i.getA(), i.getA()));
+	    	SortedSet<Interval<K>> hsTs = ts.headSet(new Interval<>(i.getB(), i.getB()));
+	    	SortedSet<Interval<K>> hs = intervals.headSet(new Interval<>(i.getA(), i.getA()));
+	    	
+	    	hsTs.clear();
+	    	if (!hs.isEmpty()) {
+		    	if (hs.last().contains(i.getA())) {
+		    		SortedSet<Interval<K>> tsHs = ts.headSet(new Interval<>(hs.last().getA(), hs.last().getA()));
+		    		intervals.add(new Interval<K>(hs.last().getA(), i.getB()));
+		    		return true;
+		    	}
+	    	}
+        }
+    	
+    	return false;
     }
 
     @Override
@@ -91,7 +112,9 @@ public class OverlappingIntervalSet<K extends Comparable<K>> implements Interval
     @Override
     public boolean contains(K x) {
         // TODO Add code for searching here.
-    	for (Interval<K> i : intervals) {
+    	SortedSet<Interval<K>> set = intervals.tailSet(new Interval<K>(x,x));
+    	if (!set.isEmpty()) {
+    		Interval<K> i = set.first();
     		if (i.contains(x))
     			return true;
     	}
