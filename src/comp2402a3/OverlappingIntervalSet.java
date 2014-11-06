@@ -25,80 +25,43 @@ public class OverlappingIntervalSet<K extends Comparable<K>> implements Interval
     	// Check if i overlaps with other intervals in set 
     	// Pick the min. value for a and the max. value for b
     	// when i overlaps with 2 or more intervals
-    	/*if (intervals.isEmpty() &&
-        		(!(i.getA().compareTo(i.getB()) == 0))) {
+    	
+    	if (intervals.isEmpty()) {
         		intervals.add(i);
         		return true;
         } else {
-        	SortedSet<Interval<K>> hs = intervals.headSet(new Interval<>(i.getA(), i.getA()));
-        	SortedSet<Interval<K>> ts = intervals.tailSet(new Interval<>(i.getA(), i.getA()));
+        	SortedSet<Interval<K>> tsA = intervals.tailSet(new Interval<>(i.getA(),i.getA()));
+        	SortedSet<Interval<K>> tsB = intervals.tailSet(new Interval<>(i.getB(),i.getB()));
         	
-        	if (ts.isEmpty()) {
-        		// if interval is being added at the end
-        		if (i.getA().compareTo(hs.last().getB()) > 0) {
-        			// if interval is disjoint
+        	K iA = i.getA();
+        	K iB = i.getB();
+        	        	
+        	if (tsA.isEmpty() || tsB.isEmpty()) {            	
+        		intervals.add(i);
+        		return true;
+        	} else if (!tsA.isEmpty() && tsB.isEmpty()) {
+        		K tsAA = tsA.first().getA();
+        		
+        		if (iA.compareTo(tsAA) < 0) {
+        			tsA.clear();
         			intervals.add(i);
+        			return true;
         		} else {
-        			if (i.getB().compareTo(hs.last().getB()) > 0) {
-        				// if interval is bigger than overlapping interval
-        				intervals.add(new Interval<>(hs.last().getA(), i.getB()));
-        				hs.clear();
-        			} else {
-        				return false;
-        			}
+        			tsA.clear();
+        			intervals.add(new Interval<>(tsAA,iB));
+        			return true;
         		}
-    			return true;
-        	} else if (hs.isEmpty()) {
-        		// if interval is being added at the beginning
-        		if (i.getA().compareTo(ts.first().getA()) < 0) {
-        			// if interval is being added to the left of the tail set
-        			if (i.getB().compareTo(ts.first().getA()) < 0) {
-        				// interval is disjoint
-        				intervals.add(i);
-        			} else {
-        				if (i.getB().compareTo(ts.first().getB()) <= 0) {
-        					// interval is smaller than end of tail set interval
-        					intervals.add(new Interval<>(i.getA(), ts.first().getB()));
-        					ts.clear();
-        				} else {
-        					// interval is larger than tail set interval
-        					intervals.add(i);
-        					ts.clear();
-        				}
-        			}
-        		} else if (i.getA().compareTo(ts.first().getA()) == 0) {
-        			// if interval is added at the tail set
-        			if (i.getB().compareTo(ts.first().getB()) > 0) {
-        				// if interval is large
-        				intervals.add(i);
-        				ts.clear();
-        			} else {
-        				return false;
-        			}
+        	} else if (!tsA.isEmpty() && !tsB.isEmpty()) {
+        		K tsAA = tsA.first().getA();
+            	K tsAB = tsA.last().getB();
+            	K tsBA = tsB.first().getA();
+            	K tsBB = tsB.last().getB();
+        		
+        		if (iA.compareTo(tsAA) < 0 && iB.compareTo(tsAA) < 0) {
+        			intervals.add(i);
+        			return true;
         		}
-    			return true;
-        	}
-        }
-    	
-        return false;*/
-    	
-    	if (intervals.isEmpty()) {
-    		// add to an empty set
-    		intervals.add(i);
-    		return true;
-    	} else {
-	    	SortedSet<Interval<K>> ts = intervals.tailSet(new Interval<>(i.getA(), i.getA()));
-	    	SortedSet<Interval<K>> hsTs = ts.headSet(new Interval<>(i.getB(), i.getB()));
-	    	SortedSet<Interval<K>> hs = intervals.headSet(new Interval<>(i.getA(), i.getA()));
-	    	
-	    	hsTs.clear();
-	    	if (!hs.isEmpty()) {
-		    	if (hs.last().contains(i.getA())) {
-		    		SortedSet<Interval<K>> tsHs = ts.headSet(new Interval<>(hs.last().getA(), hs.last().getA()));
-		    		intervals.add(new Interval<K>(hs.last().getA(), i.getB()));
-		    		return true;
-		    	}
-	    	}
+        	} 
         }
     	
     	return false;

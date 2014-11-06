@@ -107,18 +107,25 @@ public class Tester {
 
     public static boolean testPart2(IntervalSet<Integer> dis) {
         // Your code goes here
-    	for (int j = 0; j < 5; j++) {
-    		for (int k = j + 1; k < 6; k++) {
-    			Interval<Integer> i = new Interval<Integer>(j,k);
-    			dis.add(i);
-    		}
+    	for (int j = 2; j < 5; j++) {
+			Interval<Integer> i = new Interval<Integer>(j,j+1);
+			dis.add(i);
     	}
     	
     	System.out.println(dis);
     	System.out.println("\n");
     	
-    	dis.add(new Interval<Integer>(5,6));
+    	for (int j = 7; j < 10; j++) {
+			Interval<Integer> i = new Interval<Integer>(j,j+1);
+			dis.add(i);
+    	}
     	
+    	System.out.println(dis);
+    	System.out.println("\n");
+    	
+    	Interval<Integer> int1 = new Interval<Integer>(8,12);
+    	
+    	System.out.println("Adding " + int1 + " : \n");
     	System.out.println(dis);
     	System.out.println("\n");
     	
