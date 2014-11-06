@@ -87,21 +87,37 @@ public class OverlappingIntervalSet<K extends Comparable<K>> implements Interval
     		intervals.add(i);
     		return true;
     	} else {
-	    	SortedSet<Interval<K>> ts = intervals.tailSet(new Interval<>(i.getA(), i.getA()));
-	    	SortedSet<Interval<K>> hsTs = ts.headSet(new Interval<>(i.getB(), i.getB()));
-	    	SortedSet<Interval<K>> hs = intervals.headSet(new Interval<>(i.getA(), i.getA()));
+	    	SortedSet<Interval<K>> tsA = intervals.tailSet(new Interval<>(i.getA(), i.getA()));
+	    	SortedSet<Interval<K>> tsB = intervals.tailSet(new Interval<>(i.getB(), i.getB()));
 	    	
-	    	hsTs.clear();
-	    	if (!hs.isEmpty()) {
-		    	if (hs.last().contains(i.getA())) {
-		    		SortedSet<Interval<K>> tsHs = ts.headSet(new Interval<>(hs.last().getA(), hs.last().getA()));
-		    		intervals.add(new Interval<K>(hs.last().getA(), i.getB()));
-		    		return true;
-		    	}
+	    	if (tsB.isEmpty()) {
+	    		intervals.add(new Interval<>(tsA.first().getA(), i.getB()));
+	    		tsA.clear();
+	    		return true;
+	    	} else {
+	    		if (tsA.contains(i.getA())) {
+	    			if (tsB.contains(i.getB())) {
+	    				intervals.add(new Interval<>(tsA.first().getA(), i.getB()));
+	    	    		tsA.clear();
+	    	    		return true;
+	    			} else {
+	    				intervals.add(new Interval<>(tsA.first().getA(), i.getB()));
+	    	    		tsA.clear();
+	    	    		return true;
+	    			}
+	    		} else {
+	    			if (tsB.contains(i.getB())) {
+	    				intervals.add(new Interval<>(tsA.first().getA(), i.getB()));
+	    	    		tsA.clear();
+	    	    		return true;
+	    			} else {
+	    				intervals.add(new Interval<>(tsA.first().getA(), i.getB()));
+	    	    		tsA.clear();
+	    	    		return true;
+	    			}
+	    		}
 	    	}
         }
-    	
-    	return false;
     }
 
     @Override
