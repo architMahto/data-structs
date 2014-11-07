@@ -123,7 +123,31 @@ public class Tester {
     	System.out.println(dis);
     	System.out.println("\n");
     	
-    	Interval<Integer> int1 = new Interval<Integer>(11,13);
+    	for (int j = 13; j < 17; j++) {
+			Interval<Integer> i = new Interval<Integer>(j,j+1);
+			dis.add(i);
+    	}
+    	
+    	System.out.println(dis);
+    	System.out.println("\n");
+    	
+    	for (int j = 20; j < 24; j++) {
+			Interval<Integer> i = new Interval<Integer>(j,j+1);
+			dis.add(i);
+    	}
+    	
+    	System.out.println(dis);
+    	System.out.println("\n");
+    	
+    	for (int j = 26; j < 30; j++) {
+			Interval<Integer> i = new Interval<Integer>(j,j+1);
+			dis.add(i);
+    	}
+    	
+    	System.out.println(dis);
+    	System.out.println("\n");
+    	
+    	Interval<Integer> int1 = new Interval<Integer>(8,22);
     	dis.add(int1);
     	
     	System.out.println("Adding " + int1 + " : \n");
