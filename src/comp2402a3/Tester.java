@@ -123,23 +123,50 @@ public class Tester {
     	System.out.println(dis);
     	System.out.println("\n");
     	
-    	Interval<Integer> int1 = new Interval<Integer>(8,12);
+    	for (int j = 13; j < 17; j++) {
+			Interval<Integer> i = new Interval<Integer>(j,j+1);
+			dis.add(i);
+    	}
+    	
+    	System.out.println(dis);
+    	System.out.println("\n");
+    	
+    	for (int j = 20; j < 24; j++) {
+			Interval<Integer> i = new Interval<Integer>(j,j+1);
+			dis.add(i);
+    	}
+    	
+    	System.out.println(dis);
+    	System.out.println("\n");
+    	
+    	for (int j = 26; j < 30; j++) {
+			Interval<Integer> i = new Interval<Integer>(j,j+1);
+			dis.add(i);
+    	}
+    	
+    	System.out.println(dis);
+    	System.out.println("\n");
+    	
+    	Interval<Integer> int1 = new Interval<Integer>(8,22);
+    	dis.add(int1);
     	
     	System.out.println("Adding " + int1 + " : \n");
     	System.out.println(dis);
     	System.out.println("\n");
     	
-    	Interval<Integer> int2 = new Interval<Integer>(6,12);
+    	/*Interval<Integer> int2 = new Interval<Integer>(7,15);
+    	dis.add(int2);
     	
     	System.out.println("Adding " + int2 + " : \n");
     	System.out.println(dis);
     	System.out.println("\n");
     	
-    	Interval<Integer> int3 = new Interval<Integer>(11,12);
+    	Interval<Integer> int3 = new Interval<Integer>(0,2);
+    	System.out.println("Adding " + int3 + " :");
+    	dis.add(int3);
     	
-    	System.out.println("Adding " + int3 + " : \n");
-    	System.out.println(dis);
-    	System.out.println("\n");
+    	//System.out.println(dis);
+    	System.out.println("\n");*/
     	
         return true;
     }
