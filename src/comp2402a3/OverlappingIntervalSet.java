@@ -32,13 +32,85 @@ public class OverlappingIntervalSet<K extends Comparable<K>> implements Interval
         } else {
         	SortedSet<Interval<K>> tsA = intervals.tailSet(new Interval<>(i.getA(), i.getA()));
         	SortedSet<Interval<K>> tsB = intervals.tailSet(new Interval<>(i.getB(), i.getB()));
+        	SortedSet<Interval<K>> hsA = intervals.headSet(new Interval<>(i.getA(), i.getA()));
+        	SortedSet<Interval<K>> hsB = intervals.headSet(new Interval<>(i.getB(), i.getB()));
         	
         	K iA = i.getA();
         	K iB = i.getB();
         	
         	if (tsA.isEmpty() && tsB.isEmpty()) {
-        		intervals.add(i);
-        		return true;
+        		K hsALastA = hsA.last().getA();
+        		K hsALastB = hsA.last().getB();
+        		
+        		if (iA.compareTo(hsALastB) <= 0) {
+        			hsA.remove(hsA.last());
+        			intervals.add(new Interval<>(hsALastA,iB));
+        			return true;
+        		} else {
+        			intervals.add(i);
+        			return true;
+        		}
+        	} else if (!tsA.isEmpty() && tsB.isEmpty()) {
+        		if (hsA.isEmpty()) {
+        			tsA.clear();
+        			intervals.add(i);
+        			return true;
+        		} else {
+        			K hsAlastA = hsA.last().getA();
+            		K hsAlastB = hsA.last().getB();
+            		K tsAfirstA = tsA.first().getA();
+        			
+        			if (iA.compareTo(tsAfirstA) < 0) {
+        				if (iA.compareTo(hsAlastB) > 0) {
+        					tsA.clear();
+                			intervals.add(i);
+                			return true;
+        				} else {
+        					tsA.clear();
+        					hsA.remove(hsA.last());
+                			intervals.add(new Interval<>(hsAlastA,iB));
+                			return true;
+        				}
+        			} else {
+    					tsA.clear();
+            			intervals.add(new Interval<>(tsAfirstA,iB));
+            			return true;
+        			}
+        		}
+        	} else if (!tsA.isEmpty() && !tsB.isEmpty()) {
+        		K tsBB = tsB.first().getB();
+        		
+        		System.out.println("\n");
+        		System.out.println("Head Set of A: " + hsA);
+        		System.out.println("\n");
+        		System.out.println("Head Set of B: " + hsB);
+        		System.out.println("\n");
+        		System.out.println("Tail Set of B: " + tsB);
+        		System.out.println("\n");
+        		
+        		if (hsA.isEmpty() && hsB.isEmpty()) {
+            		intervals.add(i);
+            		return true;
+            	} else if (hsA.isEmpty() && !hsB.isEmpty()) {
+            		if (tsB.first().contains(iB)) {
+            			System.out.println("Clearing " + hsB + ": \n");
+            			hsB.clear();
+            			System.out.println("Removing " + tsB.first() + ": \n");
+            			tsB.remove(tsB.first());
+            			Interval<K> newInt = new Interval<K>(iA,tsBB);
+            			System.out.println("Adding " + newInt + ": \n");
+            			intervals.add(newInt);
+            			System.out.println(intervals);
+            			return true;
+            		} else {
+            			System.out.println("Clearing " + hsB + ": \n");
+            			hsB.clear();
+            			System.out.println("Adding " + i + ": \n");
+            			intervals.add(i);
+            			System.out.println(intervals);
+            			return true;
+            		}
+            	}
         	}
         }
         return false;
