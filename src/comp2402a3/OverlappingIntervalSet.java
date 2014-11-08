@@ -34,11 +34,9 @@ public class OverlappingIntervalSet<K extends Comparable<K>> implements Interval
         	SortedSet<Interval<K>> tsA = intervals.tailSet(new Interval<>(i.getA(), i.getA()));
         	SortedSet<Interval<K>> tsB = intervals.tailSet(new Interval<>(i.getB(), i.getB()));
         	SortedSet<Interval<K>> hsA = intervals.headSet(new Interval<>(i.getA(), i.getA()));
-        	SortedSet<Interval<K>> hsB = intervals.headSet(new Interval<>(i.getB(), i.getB()));
-        	Iterator<Interval<K>> tsAItr = tsA.iterator();
+        	Interval<K> newInt = null;
         	
-        	K iA = i.getA();
-        	K iB = i.getB();
+        	K iA = i.getA(), iB = i.getB();
         	
         	if (tsA.isEmpty() && tsB.isEmpty()) {
         		// if both tail sets are empty
@@ -48,127 +46,116 @@ public class OverlappingIntervalSet<K extends Comparable<K>> implements Interval
         		if (iA.compareTo(hsALastB) <= 0) {
         			// if iA overlaps with last element of headset from iA
         			hsA.remove(hsA.last());
-        			intervals.add(new Interval<>(hsALastA,iB));
-        			return true;
+        			newInt = new Interval<>(hsALastA,iB);
         		} else {
         			// if iA doesn't overlap with last element of headset from iA
-        			intervals.add(i);
-        			return true;
+        			newInt = i;
         		}
+        		intervals.add(newInt);
+    			return true;
         	} else if (!tsA.isEmpty() && tsB.isEmpty()) {
         		// if tailset from iA is not empty and tailset from iB is empty
+        		K tsAfirstA = tsA.first().getA();
+        		
+        		tsA.clear();
+        		
         		if (hsA.isEmpty()) {
         			// if headset from iA is empty
-        			tsA.clear();
-        			intervals.add(i);
-        			return true;
+        			newInt = i;
         		} else {
         			// if headset from iA is not empty
-        			K hsAlastA = hsA.last().getA();
+            		K hsAlastA = hsA.last().getA();
             		K hsAlastB = hsA.last().getB();
-            		K tsAfirstA = tsA.first().getA();
         			
-        			if (iA.compareTo(tsAfirstA) < 0) {
-        				// if iA doesn't overlap with first interval of tailset from iA
-        				if (iA.compareTo(hsAlastB) > 0) {
-        					// if iA doesn't overlap with last interval of headset from iA
-        					tsA.clear();
-                			intervals.add(i);
-                			return true;
-        				} else {
-        					// if iA overlaps with last interval of headset from iA
-        					tsA.clear();
-        					hsA.remove(hsA.last());
-                			intervals.add(new Interval<>(hsAlastA,iB));
-                			return true;
-        				}
-        			} else {
-        				// if iA overlaps with first interval of tailset from iA
-    					tsA.clear();
-            			intervals.add(new Interval<>(tsAfirstA,iB));
-            			return true;
-        			}
+            		if (iA.compareTo(tsAfirstA) < 0 && iA.compareTo(hsAlastB) > 0) {
+            			// if iA doesn't overlap with first interval of tailset from iA & iA doesn't overlap with last interval of headset from iA
+            			newInt = i;
+            		} else if (iA.compareTo(tsAfirstA) < 0 && iA.compareTo(hsAlastB) <= 0) {
+            			// if iA doesn't overlap with first interval of tailset from iA & iA overlaps with last interval of headset from iA
+            			hsA.remove(hsA.last());
+            			newInt = new Interval<>(hsAlastA,iB);
+            		} else if (iA.compareTo(tsAfirstA) >= 0) {
+            			// if iA overlaps with first interval of tailset from iA
+            			newInt = new Interval<>(tsAfirstA,iB);
+            		}
         		}
+        		intervals.add(newInt);
+    			return true;
         	} else if (!tsA.isEmpty() && !tsB.isEmpty()) {
         		// if both tail sets are empty
+        		K tsAfirstA = tsA.first().getA();
         		K tsBfirstA = tsB.first().getA();
         		K tsBfirstB = tsB.first().getB();
-        		
-        		if (hsA.isEmpty() && hsB.isEmpty()) {
-        			// if both headsets are empty
-        			if (iB.compareTo(tsBfirstA) >= 0) {
-        				// iB overlaps first interval of tailset from B
-        				tsB.remove(tsB.first());
-            			intervals.add(new Interval<>(iA,tsBfirstB));
-            			return true;
-        			} else {
-        				// iB doesn't overlap first interval of tailset from B
-	            		intervals.add(i);
-	            		return true;
-        			}
-            	} else if (hsA.isEmpty() && !hsB.isEmpty()) {
-            		// if headset from iA is empty and headset from iB is not empty
-            		if (tsB.first().contains(iB)) {
-            			// if iB overlaps first interval of tailset from B
-            			hsB.clear();
+        		K firstIntervalA = intervals.first().getA();
+        		        		
+        		if (hsA.isEmpty()) {
+        			// if head set from A is empty
+        			if (tsBfirstB.compareTo(firstIntervalA) < 0) {
+        				// if i is dijoint from intervals
+        				newInt = i;
+        			} else if (tsBfirstB.compareTo(firstIntervalA) >= 0 && iB.compareTo(tsBfirstA) < 0) {
+        				// if iB doesn't overlap with tailset from B
+        				symDifferenceTailSetAB(tsA,tsB);
+        				newInt = i;
+        			} else if (tsBfirstB.compareTo(firstIntervalA) >= 0 && iB.compareTo(tsBfirstA) >= 0) {
+        				// if iB overlaps with tailset from B			
+        				symDifferenceTailSetAB(tsA,tsB);
             			tsB.remove(tsB.first());
-            			intervals.add(new Interval<K>(iA,tsBfirstB));
-            			return true;
-            		} else {
-            			// if iB doesn't overlap with first interval from tailset of B
-            			hsB.clear();
-            			intervals.add(i);
-            			return true;
-            		}
-            	} else if (!hsA.isEmpty() && !hsB.isEmpty()) {
-            		// if both head sets are not empty
+            			newInt = new Interval<K>(iA,tsBfirstB);
+        			}
+            	} else  {
+       		
             		K hsAlastA = hsA.last().getA();
         			K hsAlastB = hsA.last().getB();
         			
-        			while (tsAItr.hasNext()) {
-        				tsAItr.next();
-        				if (tsAItr.next().compareTo(tsB.first()) == 0)
-        					break;
-        				tsAItr.remove();
-        			}
+        			symDifferenceTailSetAB(tsA,tsB);
         			
-        			System.out.println ("\n" + "New Tail Set from A: " + tsA + "\n");
-            		
-            		if (iA.compareTo(hsAlastB) <= 0) {
-            			// if iA overlaps with last interval of head set
-            			if (iB.compareTo(tsBfirstA) < 0) {
-            				// if iB doesn't overlap with first interval of tail set
-	            			hsA.remove(hsA.last());
-	            			intervals.add(new Interval<>(hsAlastA,iB));
-	            			return true;
-            			} else {
-            				// if iB overlaps with first interval of tail set
-            				hsA.remove(hsA.last());
-	            			tsB.remove(tsB.first());
-	            			intervals.add(new Interval<>(hsAlastA,tsBfirstB));
-	            			return true;
-            			}
-            		} else {
-            			// if iA doesn't overlap with last interval of head set
-            			if (iB.compareTo(tsBfirstA) < 0) {
-            				// if iB doesn't overlap with first interval of tail set
-	            			hsA.remove(hsA.last());
-	            			intervals.add(i);
-	            			return true;
-            			} else {
-            				// if iB overlaps with first interval of tail set
-            				hsA.remove(hsA.last());
-            				tsB.remove(tsB.first());
-	            			intervals.add(new Interval<>(iA,tsBfirstB));
-	            			return true;
-            			}
-            		}
+        			if (iA.compareTo(tsAfirstA) < 0 && iB.compareTo(tsBfirstA) < 0) {
+        				// if iA doesn't overlap with first interval of tailset from A & iB doesn't overlap with first interval of tailset from B
+        				if (iA.compareTo(hsAlastB) <= 0) {
+        					hsA.remove(hsA.last());
+        					newInt = new Interval<K>(hsAlastA,iB);
+        				} else {
+        					newInt = i;
+        				}
+        			} else if (iA.compareTo(tsAfirstA) < 0 && iB.compareTo(tsBfirstA) >= 0) {
+        				// if iA doesn't overlap with first interval of tailset from A & iB overlaps with first interval of tailset from B
+        				tsB.remove(tsB.first());
+        				if (iA.compareTo(hsAlastB) <= 0) {
+        					hsA.remove(hsA.last());
+        					newInt = new Interval<K>(hsAlastA,tsBfirstB);
+        				} else {
+        					newInt = new Interval<K>(iA,tsBfirstB);
+        				}
+        			} else if (iA.compareTo(tsAfirstA) >= 0 && iB.compareTo(tsBfirstA) < 0) {
+        				// if iA overlaps with first interval of tailset from A & if iB doesn't overlap with first interval of tailset from B
+        				newInt = new Interval<K>(tsAfirstA,iB);
+        			} else if (iA.compareTo(tsAfirstA) >= 0 && iB.compareTo(tsBfirstA) >= 0) {
+        				// if iA overlaps with first interval of tailset from A & if iB overlaps with first interval of tailset from B
+        				tsB.remove(tsB.first());
+        				newInt = new Interval<K>(tsAfirstA,tsBfirstB);
+        			}
             	}
+        		intervals.add(newInt);
+				return true;
         	}
         }
         return false;
     }
 
+    // remove all elements sets A and B have in common
+    public void symDifferenceTailSetAB (SortedSet<Interval<K>> setA, SortedSet<Interval<K>> setB) {
+    	
+    	Iterator<Interval<K>> setAItr = setA.iterator();
+    	
+    	while (setAItr.hasNext()) {
+			Interval<K> currentInterval = setAItr.next();
+			if (currentInterval.compareTo(setB.first()) == 0) 
+				break;
+			setAItr.remove();
+		}
+    }
+    
 	@Override
     public void clear() {
         intervals.clear();
@@ -177,10 +164,14 @@ public class OverlappingIntervalSet<K extends Comparable<K>> implements Interval
     @Override
     public boolean contains(K x) {
         // TODO Add code for searching here.
-    	SortedSet<Interval<K>> set = intervals.tailSet(new Interval<K>(x,x));
-    	if (!set.isEmpty()) {
-    		Interval<K> i = set.first();
+    	SortedSet<Interval<K>> ts = intervals.tailSet(new Interval<K>(x,x));
+    	if (!ts.isEmpty()) {
+    		SortedSet<Interval<K>> tsN = ts.tailSet(new Interval<K>(ts.first().getB(),ts.first().getB()));
+    		Interval<K> i = ts.first();
     		if (i.contains(x))
+    			return true;
+    		
+    		if (!tsN.isEmpty() && tsN.first().getA().equals(x))
     			return true;
     	}
         return false;
