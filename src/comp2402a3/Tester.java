@@ -124,6 +124,73 @@ public class Tester {
     		timer.start();
 	    	dis.add(newInt);
 	    	timer.stop();
+	    	if (timer.elapsedSeconds() > 2) {
+	    		System.out.println(newInt + " : " + timer.elapsedSeconds() + " s");
+	    		return false;
+    	    } else {
+	    		System.out.println(newInt + " : " + timer.elapsedSeconds() + " s");
+    	    }
+    	}	
+    	for (int i = 7; i < 10; i++) {
+    		Interval<Integer> newInt = new Interval<Integer>(i,i+1);
+    		timer.start();
+	    	dis.add(newInt);
+	    	timer.stop();
+	    	if (timer.elapsedSeconds() > 2) {
+	    		System.out.println(newInt + " : " + timer.elapsedSeconds() + " s");
+	    		return false;
+    	    } else {
+	    		System.out.println(newInt + " : " + timer.elapsedSeconds() + " s");
+    	    }
+    	}
+    	for (int i = 13; i < 17; i++) {
+    		Interval<Integer> newInt = new Interval<Integer>(i,i+1);
+    		timer.start();
+	    	dis.add(newInt);
+	    	timer.stop();
+	    	if (timer.elapsedSeconds() > 2) {
+	    		System.out.println(newInt + " : " + timer.elapsedSeconds() + " s");
+	    		return false;
+    	    } else {
+	    		System.out.println(newInt + " : " + timer.elapsedSeconds() + " s");
+    	    }
+    	}
+    	for (int i = 20; i < 24; i++) {
+    		Interval<Integer> newInt = new Interval<Integer>(i,i+1);
+    		timer.start();
+	    	dis.add(newInt);
+	    	timer.stop();
+	    	if (timer.elapsedSeconds() > 2) {
+	    		System.out.println(newInt + " : " + timer.elapsedSeconds() + " s");
+	    		return false;
+    	    } else {
+	    		System.out.println(newInt + " : " + timer.elapsedSeconds() + " s");
+    	    }
+    	}
+    	for (int i = 26; i < 30; i++) {
+    		Interval<Integer> newInt = new Interval<Integer>(i,i+1);
+    		timer.start();
+	    	dis.add(newInt);
+	    	timer.stop();
+	    	if (timer.elapsedSeconds() > 2) {
+	    		System.out.println(newInt + " : " + timer.elapsedSeconds() + " s");
+	    		return false;
+    	    } else {
+	    		System.out.println(newInt + " : " + timer.elapsedSeconds() + " s");
+    	    }
+    	}
+    	
+    	System.out.println("-------------------------");
+    	System.out.println("Overlapping Interval Test");
+    	System.out.println("-------------------------\n");
+    	
+    	System.out.println("Adding elements... \n");
+    	for (int i = 2; i < 5; i++) {
+
+    		Interval<Integer> newInt = new Interval<Integer>(i,i+1);
+    		timer.start();
+	    	dis.add(newInt);
+	    	timer.stop();
 	    	System.out.println(newInt + " : " + timer.elapsedSeconds() + " s");
     	}	
     	for (int i = 7; i < 10; i++) {
@@ -160,6 +227,9 @@ public class Tester {
     	System.out.println("\n");
     	
     	Interval<Integer> newInt = new Interval<Integer>(10,13);
+    	   	
+    	// Adding disjoint interval from right
+    	newInt = new Interval<Integer>(32,34);
     	
     	System.out.println("Done. Adding test element " + newInt + " ...\n");
     	
@@ -167,14 +237,85 @@ public class Tester {
     	dis.add(newInt);
     	timer.stop();
     	
+    	if (timer.elapsedSeconds() > 2) {
+    		System.out.println(timer.elapsedSeconds() + " s\n");
+    		return false;
+    	} else {
+    		System.out.println(timer.elapsedSeconds() + " s\n");
+    	}
+    	
+    	System.out.println("Done. Adding test element " + newInt + " ...\n");
+    	
+    	timer.start();
+    	dis.add(newInt);
+    	timer.stop();
+    	// Adding overlapping interval from left
+    	newInt = new Interval<Integer>(0,4);
+    	
+    	System.out.println("Done. Adding test element " + newInt + " ...\n");
+    	
+    	timer.start();
+    	dis.add(newInt);
+    	timer.stop();
+    	
+    	if (timer.elapsedSeconds() > 2) {
+    		System.out.println(timer.elapsedSeconds() + " s\n");
+    		return false;
+    	} else {
+    		System.out.println(timer.elapsedSeconds() + " s\n");
+    	}
+    	
     	System.out.println(timer.elapsedSeconds() + " s\n");
+    	
+
+    	// Adding overlapping interval from right
+    	newInt = new Interval<Integer>(27,36);
+    	
+    	System.out.println("Done. Adding test element " + newInt + " ...\n");
+    	
+    	timer.start();
+    	dis.add(newInt);
+    	timer.stop();
+    	
+    	if (timer.elapsedSeconds() > 2) {
+    		System.out.println(timer.elapsedSeconds() + " s\n");
+    		return false;
+    	} else {
+    		System.out.println(timer.elapsedSeconds() + " s\n");
+    	}
     	
     	System.out.println(dis);
     	System.out.println("\n");
     	System.out.println("Finished");
     	System.out.println("\n");
     	
+    	// Adding overlapping interval from right
+    	newInt = new Interval<Integer>(10,24);
+    	
+    	System.out.println("Done. Adding test element " + newInt + " ...\n");
+    	
+    	timer.start();
+    	dis.add(newInt);
+    	timer.stop();
+    	
     	for (int i = 0; i < 31; i++)
+    		System.out.println(i + " " + dis.contains(i));
+    	if (timer.elapsedSeconds() > 2) {
+    		System.out.println(timer.elapsedSeconds() + " s\n");
+    		return false;
+    	} else {
+    		System.out.println(timer.elapsedSeconds() + " s\n");
+    	}
+    	
+
+    	System.out.println(dis);
+    	System.out.println("\n");
+
+    	
+    	System.out.println("Finished");
+    	System.out.println("\n");
+    	
+    	for (int i = 0; i < 37; i++)
     		System.out.println(i + " " + dis.contains(i));
     	
     	System.out.println("\n");
