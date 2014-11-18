@@ -1,6 +1,8 @@
 package comp2402a4;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 
@@ -13,15 +15,16 @@ public class GeometricTree extends BinaryTree<GeometricTreeNode> {
 	public void inorderDraw() {
 		assignLevels();
 		// TODO: use your code here instead
-		//Random rand = new Random();
-		//randomX(r, rand);
 		GeometricTreeNode u = r, prev = nil, next;
 		int xCounter = 0;
 		while (u != nil) {
 			if (prev == u.parent) {
 				if (u.left != nil) {next = u.left;}
-				else if (u.right != nil) {next = u.right;}
-				else {
+				else if (u.right != nil) {
+					u.position.x = xCounter;
+					xCounter++;
+					next = u.right;
+				} else {
 					u.position.x = xCounter;
 					xCounter++;
 					next = u.parent;
@@ -85,8 +88,68 @@ public class GeometricTree extends BinaryTree<GeometricTreeNode> {
 	
 	public void balancedDraw() {
 		assignLevels();
-		Random rand = new Random();
-		randomX(r, rand);
+		//Random rand = new Random();
+		//randomX(r, rand);
+		Map<GeometricTreeNode,Integer> tree = new HashMap<>();
+		GeometricTreeNode u = r, prev = nil, next;
+		
+		while (u != nil) {
+			if (prev == u.parent) {
+				if (u.left != nil) { 
+					next = u.left;
+				} else if (u.right != nil) {
+					next = u.right;
+				} else {
+					next = u.parent;
+					tree.put(u, 1);
+				}
+			} else if (prev == u.left) {
+				if (u.right != nil) {
+					next = u.right;
+				} else {
+					next = u.parent;
+					tree.put(u, 1 + tree.get(u.left));
+				}
+			} else {
+				next = u.parent;
+				if (tree.get(u.left) == null)
+					tree.put(u, 1 + tree.get(u.right));
+				else 
+					tree.put(u, 1 + tree.get(u.left) + tree.get(u.right));
+			}
+			prev = u;
+			u = next;
+		}
+		
+		u.position.x = 0; u.position.y = 0;
+		
+		while (u != nil) {
+			if (prev == u.parent) {
+				if (u.left != nil) next = u.left;
+				else if (u.right != nil) next = u.right;
+				else next = u.parent;
+			} else if (prev == u.left) {
+				if (u.right != nil) next = u.right;
+				else next = u.parent;
+			} else {
+				next = u.parent;
+			}
+			
+			if (tree.get(u.left) > tree.get(u.right)) {
+				u.left.position.x = tree.get(u.right) + 1;
+				u.left.position.y = u.position.y;
+				u.right.position.x = u.position.x;
+				u.right.position.y = tree.get(u.left) + 1;
+			} else {
+				u.right.position.x = tree.get(u.left) + 1;
+				u.right.position.y = u.position.y;
+				u.left.position.x = u.position.x;
+				u.left.position.y = tree.get(u.right) + 1;
+			}
+				
+			prev = u;
+			u = next;
+		}
 	}
 		
 	protected void assignLevels() {
