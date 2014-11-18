@@ -1,6 +1,8 @@
 package comp2402a4;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 
@@ -13,15 +15,16 @@ public class GeometricTree extends BinaryTree<GeometricTreeNode> {
 	public void inorderDraw() {
 		assignLevels();
 		// TODO: use your code here instead
-		//Random rand = new Random();
-		//randomX(r, rand);
 		GeometricTreeNode u = r, prev = nil, next;
 		int xCounter = 0;
 		while (u != nil) {
 			if (prev == u.parent) {
 				if (u.left != nil) {next = u.left;}
-				else if (u.right != nil) {next = u.right;}
-				else {
+				else if (u.right != nil) {
+					u.position.x = xCounter;
+					xCounter++;
+					next = u.right;
+				} else {
 					u.position.x = xCounter;
 					xCounter++;
 					next = u.parent;
@@ -85,8 +88,88 @@ public class GeometricTree extends BinaryTree<GeometricTreeNode> {
 	
 	public void balancedDraw() {
 		assignLevels();
-		Random rand = new Random();
-		randomX(r, rand);
+		//Random rand = new Random();
+		//randomX(r, rand);
+		Map<GeometricTreeNode,Integer> tree = new HashMap<>();
+		GeometricTreeNode u = r, prev = nil, next, left, right;
+		u.position.x = 0; u.position.y = 0;
+		int x = 0, power = 0;
+		
+		while (u != nil) {
+			
+			left = u.left;
+			right = u.right;
+			
+			if (prev == u.parent) {
+				if (u.left != nil) { 
+					next = u.left;
+				} else if (u.right != nil) {
+					next = u.right;
+				} else {
+					next = u.parent;
+					tree.put(u, 1);
+				}
+			} else if (prev == u.left) {
+				if (u.right != nil) {
+					next = u.right;
+				} else {
+					next = u.parent;
+					tree.put(u, 1 + tree.get(u.left));
+				}
+			} else {
+				next = u.parent;
+				if (tree.get(u.left) == null)
+					tree.put(u, 1 + tree.get(u.right));
+				else 
+					tree.put(u, 1 + tree.get(u.left) + tree.get(u.right));
+			}
+			
+			prev = u;
+			u = next;
+			
+			if (next == left) {
+				u.position.x += Math.pow(2.0,power);
+			} else if (next == right) {
+				u.position.x += Math.pow(3.0,power);
+			}
+		}
+		
+		u = r; prev = nil;
+		u.position.x = 0; u.position.y = 0;
+		
+		while (u != nil) {
+			if (prev == u.parent) {
+				if (u.left != nil) {
+					if (u.right != nil) {
+						if (tree.get(u.left) <= tree.get(u.right)) next = u.left;
+						else next = u.right;		
+					} else {
+						next = u.left;
+					}
+				} else if (u.right != nil) {
+					if (u.left != nil) {
+						if (tree.get(u.right) <= tree.get(u.left)) next = u.right;
+						else next = u.left;		
+					} else {
+						next = u.right;
+					}
+				} else {
+					next = u.parent;
+				}
+			} else if (prev == u.left) {
+				if (u.right != nil) next = u.right;
+				else next = u.parent;
+			} else {
+				if (tree.get(u.left) > tree.get(u.right)) next = u.left; 
+				else next = u.parent;
+			}
+							
+			prev = u;
+			u = next;
+			
+			//iterations++;
+			//if (iterations >= 10) break;
+		}
 	}
 		
 	protected void assignLevels() {
