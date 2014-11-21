@@ -125,30 +125,36 @@ public class GeometricTree extends BinaryTree<GeometricTreeNode> {
 		
 		while (u != nil) {
 			if (prev == u.parent) {
-				if (u.left != nil) next = u.left;
-				else if (u.right != nil) next = u.right;
-				else next = u.parent;
+				if (u.left != nil) {
+					if (u.right != nil) {
+						if (tree.get(u.left) <= tree.get(u.right)) next = u.left;
+						else next = u.right;		
+					} else {
+						next = u.left;
+					}
+				} else if (u.right != nil) {
+					if (u.left != nil) {
+						if (tree.get(u.right) <= tree.get(u.left)) next = u.right;
+						else next = u.left;		
+					} else {
+						next = u.right;
+					}
+				} else {
+					next = u.parent;
+				}
 			} else if (prev == u.left) {
 				if (u.right != nil) next = u.right;
 				else next = u.parent;
 			} else {
-				next = u.parent;
+				if (tree.get(u.left) > tree.get(u.right)) next = u.left; 
+				else next = u.parent;
 			}
-			
-			if (tree.get(u.left) > tree.get(u.right)) {
-				u.left.position.x = tree.get(u.right) + 1;
-				u.left.position.y = u.position.y;
-				u.right.position.x = u.position.x;
-				u.right.position.y = tree.get(u.left) + 1;
-			} else {
-				u.right.position.x = tree.get(u.left) + 1;
-				u.right.position.y = u.position.y;
-				u.left.position.x = u.position.x;
-				u.left.position.y = tree.get(u.right) + 1;
-			}
-				
+							
 			prev = u;
 			u = next;
+			
+			//iterations++;
+			//if (iterations >= 10) break;
 		}
 	}
 		
