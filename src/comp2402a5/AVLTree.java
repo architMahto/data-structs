@@ -73,8 +73,12 @@ public class AVLTree<T> extends
 			int dif = height(u.left) - height(u.right);
 			if (dif > 1) {
 				// TODO: add code here to fix AVL condition on the path from u to the root, if necessary
+				if (height(u.left.right) > height(u.left.left)) rotateLeft(u.left.right); 
+				rotateRight(u);
 			} else if (dif < -1) {
-				// TODO: add code here to fix AVL condition on the path from u to the root, if necessary					
+				// TODO: add code here to fix AVL condition on the path from u to the root, if necessary
+				if (height(u.right.left) > height(u.right.right)) rotateRight(u.right.left);
+				rotateLeft(u);
 			}
 			u = u.parent;
 		}
