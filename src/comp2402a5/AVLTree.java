@@ -73,11 +73,9 @@ public class AVLTree<T> extends
 			int dif = height(u.left) - height(u.right);
 			if (dif > 1) {
 				// TODO: add code here to fix AVL condition on the path from u to the root, if necessary
-				if (height(u.left.right) > height(u.left.left)) rotateLeft(u.left.right); 
-				rotateRight(u);
+				rotateRight(u);				
 			} else if (dif < -1) {
 				// TODO: add code here to fix AVL condition on the path from u to the root, if necessary
-				if (height(u.right.left) > height(u.right.right)) rotateRight(u.right.left);
 				rotateLeft(u);
 			}
 			u = u.parent;
@@ -87,11 +85,15 @@ public class AVLTree<T> extends
 	public void rotateLeft(Node<T> u) {
 		super.rotateLeft(u);
 		// TODO: Recompute height values at u and u.parent
+		u.h = Math.max(height(u.left),height(u.right)) + 1;
+		u.left.h = Math.max(height(u.left.left),height(u.left.right)) + 1;
 	}
 	
 	public void rotateRight(Node<T> u) {
 		super.rotateRight(u);
 		// TODO: Recompute height values at u and u.parent
+		u.h = Math.max(height(u.left), height(u.right)) + 1;
+		u.right.h = Math.max(height(u.right.left),height(u.right.right)) + 1;
 	}
 
 	public static <T> T find(SortedSet<T> ss, T x) {
