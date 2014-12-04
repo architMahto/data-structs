@@ -73,10 +73,16 @@ public class AVLTree<T> extends
 			int dif = height(u.left) - height(u.right);
 			if (dif > 1) {
 				// TODO: add code here to fix AVL condition on the path from u to the root, if necessary
+				int lrDifLeft = height(u.left.left) - height(u.left.right);
+				if (lrDifLeft < 0) rotateLeft(u.left);
 				rotateRight(u);				
 			} else if (dif < -1) {
 				// TODO: add code here to fix AVL condition on the path from u to the root, if necessary
+				int lrDifRight = height(u.right.left) - height(u.right.right);
+				if (lrDifRight > 0) rotateRight(u.right);
 				rotateLeft(u);
+			} else {
+				u.h = Math.max(height(u.left),height(u.right)) + 1;
 			}
 			u = u.parent;
 		}
@@ -86,14 +92,14 @@ public class AVLTree<T> extends
 		super.rotateLeft(u);
 		// TODO: Recompute height values at u and u.parent
 		u.h = Math.max(height(u.left),height(u.right)) + 1;
-		u.left.h = Math.max(height(u.left.left),height(u.left.right)) + 1;
+		u.parent.h = Math.max(height(u.parent.left),height(u.parent.right)) + 1;
 	}
 	
 	public void rotateRight(Node<T> u) {
 		super.rotateRight(u);
 		// TODO: Recompute height values at u and u.parent
 		u.h = Math.max(height(u.left), height(u.right)) + 1;
-		u.right.h = Math.max(height(u.right.left),height(u.right.right)) + 1;
+		u.parent.h = Math.max(height(u.parent.left),height(u.parent.right)) + 1;
 	}
 
 	public static <T> T find(SortedSet<T> ss, T x) {
